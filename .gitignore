@@ -1,0 +1,21 @@
+# Data (never committed)
+data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+*.pem
+*.p8
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# OS / editor
+.DS_Store
+.vscode/
