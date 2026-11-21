@@ -1,0 +1,35 @@
+# =============================================================================
+# DCM Project: race-heat-welfare
+#
+# A single set of definitions (sources/definitions/) is deployed to two
+# environments. Each target points to its own DCM Project object and uses its
+# own templating configuration.
+#
+#   snow dcm plan   --target DEV
+#   snow dcm deploy --target DEV
+# =============================================================================
+manifest_version: 2
+type: DCM_PROJECT
+default_target: DEV
+
+targets:
+  DEV:
+    account_identifier: GIZEZVN-QR62189
+    project_name: RACING_ADMIN.DCM.RACING_PROJECT_DEV
+    project_owner: RACING_DEPLOYER
+    templating_config: DEV
+  PROD:
+    account_identifier: GIZEZVN-QR62189
+    project_name: RACING_ADMIN.DCM.RACING_PROJECT_PROD
+    project_owner: RACING_DEPLOYER
+    templating_config: PROD
+
+templating:
+  defaults:
+    wh_size: "XSMALL"
+    wh_auto_suspend: 60
+  configurations:
+    DEV:
+      env: "DEV"
+    PROD:
+      env: "PROD"
