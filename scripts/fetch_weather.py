@@ -1,20 +1,21 @@
 """
-Descarga el clima horario histórico de Open-Meteo para cada hipódromo del seed.
+Downloads historical hourly weather from Open-Meteo for every track in the seed.
 
-Uso (desde la raíz del proyecto):
-    pip install requests pandas
+Usage (from the project root):
+    pip install -r requirements.txt
     python scripts/fetch_weather.py
 
-Salida:
-    data/raw/weather/<track>.csv  (un archivo por hipódromo, horas en UTC)
+Output:
+    data/raw/weather/<track>.csv  (one file per track, times in UTC)
 
-Notas de diseño:
-- Pedimos las horas en UTC (timezone=GMT) para evitar ambigüedades con el horario
-  de verano. La conversión a hora local se hace en dbt.
-- El archivo histórico (ERA5) tiene unos días de demora, por eso END_DATE es
-  hoy menos 7 días.
-- Se descarga año por año para no pedir rangos demasiado largos en una sola request.
-- Si el CSV de un hipódromo ya existe, se saltea (para poder reanudar si se corta).
+Design notes:
+- Times are requested in UTC (timezone=GMT) to avoid daylight-saving
+  ambiguities. Conversion to local time happens in dbt.
+- The historical archive (ERA5) lags a few days behind, so END_DATE is
+  today minus 7 days.
+- Data is downloaded one year at a time to avoid overly long requests.
+- If a track's CSV already exists it is skipped, so the script can resume
+  after an interruption.
 """
 import time
 from datetime import date, timedelta
@@ -34,12 +35,12 @@ HOURLY_VARS = [
     "temperature_2m",        # °C
     "relative_humidity_2m",  # %
     "dew_point_2m",          # °C
-    "apparent_temperature",  # °C (sensación térmica)
+    "apparent_temperature",  # °C (feels-like temperature)
     "wind_speed_10m",        # km/h
-    "shortwave_radiation",   # W/m² (radiación solar)
+    "shortwave_radiation",   # W/m² (solar radiation)
 ]
 
-SLEEP_SECONDS = 1  # pausa entre requests para no saturar la API
+SLEEP_SECONDS = 1  # pause between requests to be gentle with the API
 
 
 def fetch_year(lat: float, lon: float, start: date, end: date) -> pd.DataFrame:
@@ -60,9 +61,9 @@ def fetch_year(lat: float, lon: float, start: date, end: date) -> pd.DataFrame:
             return df
         except requests.RequestException as e:
             wait = 5 * (attempt + 1)
-            print(f"    error ({e}); reintento en {wait}s")
+            print(f"    error ({e}); retrying in {wait}s")
             time.sleep(wait)
-    raise RuntimeError(f"No se pudo descargar {start}..{end} para ({lat}, {lon})")
+    raise RuntimeError(f"Could not download {start}..{end} for ({lat}, {lon})")
 
 
 def year_ranges(start: date, end: date):
@@ -79,10 +80,10 @@ def main():
 
     missing = seed[seed["latitude"].isna() | seed["longitude"].isna()]
     if not missing.empty:
-        print("Sin coordenadas (se saltean):", ", ".join(missing["betfair_track_name"]))
+        print("No coordinates (skipped):", ", ".join(missing["betfair_track_name"]))
     seed = seed.dropna(subset=["latitude", "longitude"])
 
-    print(f"Descargando clima {START_DATE} → {END_DATE} para {len(seed)} hipódromos\n")
+    print(f"Downloading weather {START_DATE} → {END_DATE} for {len(seed)} tracks\n")
 
     for _, row in seed.iterrows():
         track = row["betfair_track_name"]
@@ -90,7 +91,7 @@ def main():
         out_file = OUT_DIR / f"{slug}.csv"
 
         if out_file.exists():
-            print(f"[skip] {track} (ya existe)")
+            print(f"[skip] {track} (already exists)")
             continue
 
         print(f"[{track}]")
@@ -105,9 +106,9 @@ def main():
         df.insert(1, "latitude", row["latitude"])
         df.insert(2, "longitude", row["longitude"])
         df.to_csv(out_file, index=False)
-        print(f"    -> {len(df):,} filas en {out_file}")
+        print(f"    -> {len(df):,} rows written to {out_file}")
 
-    print("\nListo.")
+    print("\nDone.")
 
 
 if __name__ == "__main__":
