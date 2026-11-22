@@ -21,3 +21,5 @@ dbt/logs/
 .vscode/
 
 snowflake/dcm/out/
+
+dbt/.user.yml

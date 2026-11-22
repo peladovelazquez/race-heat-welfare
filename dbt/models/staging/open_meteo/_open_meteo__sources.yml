@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: open_meteo
+    description: >
+      Open-Meteo historical hourly weather (ERA5 archive), one file per track,
+      downloaded by scripts/fetch_weather.py and loaded as-is (all VARCHAR).
+    database: "{{ target.database }}"
+    schema: RAW
+    tables:
+      - name: weather_hourly
+        description: Hourly weather per track, times in UTC.

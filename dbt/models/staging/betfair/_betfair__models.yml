@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_betfair__runners
+    description: >
+      Cleaned and typed Betfair runners, one row per runner per race.
+      Duplicates removed and mixed date/time formats parsed.
+    columns:
+      - name: runner_id
+        description: Surrogate key (race_id + selection_id).
+        data_tests:
+          - unique
+          - not_null
+      - name: race_id
+        description: Betfair win market ID, one per race.
+        data_tests:
+          - not_null
+      - name: meeting_date
+        description: Local date of the race meeting.
+        data_tests:
+          - not_null
+      - name: scheduled_time
+        description: Scheduled race start time (time zone to be confirmed).
+        data_tests:
+          - not_null
+      - name: betfair_track_name
+        description: Track name as written by Betfair. Joins to seed_tracks.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('seed_tracks')
+                field: betfair_track_name
+              config:
+                where: "state_code = 'NSW'"
+      - name: win_result
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["WINNER", "LOSER"]
+      - name: tab_number
+        data_tests:
+          - not_null

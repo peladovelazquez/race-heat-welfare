@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: betfair
+    description: >
+      Betfair Data Scientists historical ANZ thoroughbred files, loaded as-is
+      (all VARCHAR) by snowflake/load/load_raw.sql.
+    database: "{{ target.database }}"
+    schema: RAW
+    tables:
+      - name: betfair_runners
+        description: One row per runner per race (Betfair win and place markets).

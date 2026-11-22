@@ -1,0 +1,23 @@
+version: 2
+
+seeds:
+  - name: seed_tracks
+    description: >
+      NSW thoroughbred tracks found in the Betfair data, with approximate
+      coordinates used to download weather. Curated by hand.
+    columns:
+      - name: betfair_track_name
+        description: Track name exactly as written by Betfair (join key).
+        data_tests:
+          - unique
+          - not_null
+      - name: latitude
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: longitude
+        data_tests:
+          - not_null:
+              config:
+                severity: warn

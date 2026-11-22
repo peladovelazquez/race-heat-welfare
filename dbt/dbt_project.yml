@@ -1,0 +1,33 @@
+# =============================================================================
+# race-heat-welfare - dbt project
+# Transforms RAW (as-received data) into STAGING (cleaned, typed) and
+# MARTS (analysis-ready models). Infrastructure is managed by DCM (snowflake/dcm/).
+# =============================================================================
+name: race_heat_welfare
+version: "1.0.0"
+config-version: 2
+profile: race_heat_welfare
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  race_heat_welfare:
+    staging:
+      +schema: STAGING
+      +materialized: view
+    marts:
+      +schema: MARTS
+      +materialized: table
+
+seeds:
+  race_heat_welfare:
+    +schema: STAGING
+    seed_tracks:
+      +column_types:
+        latitude: float
+        longitude: float

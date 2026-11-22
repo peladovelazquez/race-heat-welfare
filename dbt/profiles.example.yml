@@ -1,0 +1,17 @@
+# =============================================================================
+# Example dbt profile. The real one lives OUTSIDE the repo, in ~/.dbt/profiles.yml
+# (it contains credentials). Copy this file there and fill in your details.
+# =============================================================================
+race_heat_welfare:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <your_account_identifier>      # e.g. MYORG-MYACCOUNT
+      user: <your_user>
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: RACING_DEV_ENGINEER
+      warehouse: RACING_WH_DEV
+      database: RACING_DEV
+      schema: STAGING
+      threads: 4
