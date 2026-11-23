@@ -4,13 +4,12 @@
 
     Heat risk follows the Racing NSW "Racing in Hot Weather" policy thresholds
     (dbt vars, see dbt_project.yml):
-      - meeting-day maximum temperature >= heat_policy_max_temperature_c
-      - estimated WBGT at race start    >= heat_policy_wbgt_c
+      - meeting-day maximum temperature   >= heat_policy_max_temperature_c
+      - estimated WBGT in the SHADE at start >= heat_policy_wbgt_c
     'High' when both are met, 'Elevated' when one is met, 'None' otherwise.
 
-    Caveat: the estimated WBGT assumes sunny conditions, while the policy
-    threshold refers to WBGT in the shade, so the WBGT criterion is
-    conservative (it tends to over-flag risk).
+    is_above_wbgt_sun_threshold applies the same threshold to the sun estimate
+    (worst case) and is kept for sensitivity analysis only.
 */
 
 with races as (
@@ -56,8 +55,10 @@ enriched as (
         -- policy thresholds
         races.day_max_temperature_c >= {{ var('heat_policy_max_temperature_c') }}
                                                         as is_above_temperature_threshold,
-        races.wbgt_estimated_c >= {{ var('heat_policy_wbgt_c') }}
-                                                        as is_above_wbgt_threshold
+        races.wbgt_shade_estimated_c >= {{ var('heat_policy_wbgt_c') }}
+                                                        as is_above_wbgt_threshold,
+        races.wbgt_sun_estimated_c >= {{ var('heat_policy_wbgt_c') }}
+                                                        as is_above_wbgt_sun_threshold
 
     from races
     left join tracks
@@ -97,15 +98,19 @@ final as (
         apparent_temperature_c,
         wind_speed_kmh,
         shortwave_radiation_wm2,
-        wbgt_estimated_c,
+        wet_bulb_c,
+        wbgt_shade_estimated_c,
+        wbgt_sun_estimated_c,
 
         -- meeting day
         day_max_temperature_c,
-        day_max_wbgt_estimated_c,
+        day_max_wbgt_shade_estimated_c,
+        day_max_wbgt_sun_estimated_c,
 
         -- heat risk
         is_above_temperature_threshold,
         is_above_wbgt_threshold,
+        is_above_wbgt_sun_threshold,
         case
             when is_above_temperature_threshold and is_above_wbgt_threshold then 'High'
             when is_above_temperature_threshold or  is_above_wbgt_threshold then 'Elevated'

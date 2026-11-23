@@ -21,16 +21,19 @@ models:
                 values: ["Summer", "Autumn", "Winter", "Spring"]
       - name: heat_risk_level
         description: >
+          Based on meeting-day max temperature and WBGT in the shade at start.
           High = both policy thresholds met; Elevated = one met; None = neither.
         data_tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ["High", "Elevated", "None"]
-      - name: wbgt_estimated_c
-        description: >
-          Estimated WBGT at race start (BOM approximation, assumes sun).
-          Conservative versus the policy's shade threshold.
+      - name: wbgt_shade_estimated_c
+        description: Estimated WBGT in the shade at start. Used for heat_risk_level.
+      - name: wbgt_sun_estimated_c
+        description: Estimated WBGT in the sun at start (BOM). Worst case, reference only.
+      - name: is_above_wbgt_sun_threshold
+        description: Sensitivity flag - the policy WBGT threshold applied to the sun estimate.
       - name: favourite_won
         description: >
           True if the market favourite won (a dead heat for first counts as a win).

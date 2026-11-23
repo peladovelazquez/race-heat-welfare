@@ -31,8 +31,8 @@ models:
 
   - name: int_races__weather
     description: >
-      NSW races with the weather at start time (nearest hour) and the track's
-      maximum temperature / WBGT over the meeting day.
+      NSW races with the weather at start time (nearest hour), heat-stress
+      estimates and the track's maximum temperature / WBGT over the meeting day.
     columns:
       - name: race_id
         data_tests:
@@ -42,10 +42,19 @@ models:
         description: Air temperature at 2 m, nearest hour to the start (Open-Meteo).
         data_tests:
           - not_null
-      - name: wbgt_estimated_c
+      - name: wet_bulb_c
+        description: Estimated wet-bulb temperature (Stull 2011).
+        data_tests:
+          - not_null
+      - name: wbgt_shade_estimated_c
         description: >
-          Estimated WBGT (BOM approximation, see macros/estimate_wbgt.sql).
-          Indicator only: ignores wind and solar radiation.
+          Estimated WBGT in the shade (0.7 * wet bulb + 0.3 * air temperature).
+          Compared with the Racing NSW policy threshold.
+        data_tests:
+          - not_null
+      - name: wbgt_sun_estimated_c
+        description: >
+          Estimated WBGT in the sun (BOM approximation). Worst-case reference.
         data_tests:
           - not_null
       - name: day_max_temperature_c

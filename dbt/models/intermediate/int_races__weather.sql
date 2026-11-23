@@ -4,6 +4,9 @@
 
     - Race weather: the hourly observation nearest to the scheduled start
       (start time rounded to the nearest hour, in UTC).
+    - Heat stress: wet-bulb temperature and WBGT estimated in the shade (used
+      against the Racing NSW policy threshold) and in the sun (worst case).
+      See macros/heat_stress.sql.
     - Meeting-day weather: maximum temperature and WBGT at the track over the
       local (Sydney) calendar day, comparable to the forecast maximum that
       Racing NSW uses to invoke its Hot Weather Policy.
@@ -24,7 +27,10 @@ weather as (
 
     select
         *,
-        {{ estimate_wbgt('temperature_c', 'relative_humidity_pct') }} as wbgt_estimated_c
+        round({{ estimate_wet_bulb('temperature_c', 'relative_humidity_pct') }}, 1)
+                                                                            as wet_bulb_c,
+        {{ estimate_wbgt_shade('temperature_c', 'relative_humidity_pct') }} as wbgt_shade_estimated_c,
+        {{ estimate_wbgt_sun('temperature_c', 'relative_humidity_pct') }}   as wbgt_sun_estimated_c
     from {{ ref('stg_open_meteo__weather_hourly') }}
 
 ),
@@ -35,7 +41,8 @@ meeting_day_weather as (
         betfair_track_name,
         observed_at_sydney::date        as local_date,
         max(temperature_c)              as day_max_temperature_c,
-        max(wbgt_estimated_c)           as day_max_wbgt_estimated_c
+        max(wbgt_shade_estimated_c)     as day_max_wbgt_shade_estimated_c,
+        max(wbgt_sun_estimated_c)       as day_max_wbgt_sun_estimated_c
     from weather
     group by betfair_track_name, local_date
 
@@ -53,11 +60,14 @@ final as (
         weather.apparent_temperature_c,
         weather.wind_speed_kmh,
         weather.shortwave_radiation_wm2,
-        weather.wbgt_estimated_c,
+        weather.wet_bulb_c,
+        weather.wbgt_shade_estimated_c,
+        weather.wbgt_sun_estimated_c,
 
         -- meeting day
         meeting_day_weather.day_max_temperature_c,
-        meeting_day_weather.day_max_wbgt_estimated_c
+        meeting_day_weather.day_max_wbgt_shade_estimated_c,
+        meeting_day_weather.day_max_wbgt_sun_estimated_c
 
     from races
     left join weather
