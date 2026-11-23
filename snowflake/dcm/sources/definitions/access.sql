@@ -17,12 +17,12 @@ GRANT USAGE ON WAREHOUSE RACING_WH_{{env}} TO ROLE RACING_{{env}}_ENGINEER;
 GRANT USAGE ON DATABASE  RACING_{{env}}    TO ROLE RACING_{{env}}_ENGINEER;
 
 -- Schemas
-{% for layer in ['RAW', 'STAGING', 'MARTS'] %}
+{% for layer in ['RAW', 'STAGING', 'INTERMEDIATE', 'MARTS'] %}
 GRANT USAGE ON SCHEMA RACING_{{env}}.{{layer}} TO ROLE RACING_{{env}}_ENGINEER;
 {% endfor %}
 
--- dbt creates tables and views in STAGING and MARTS
-{% for layer in ['STAGING', 'MARTS'] %}
+-- dbt creates tables and views in STAGING, INTERMEDIATE and MARTS
+{% for layer in ['STAGING', 'INTERMEDIATE', 'MARTS'] %}
 GRANT CREATE TABLE, CREATE VIEW ON SCHEMA RACING_{{env}}.{{layer}} TO ROLE RACING_{{env}}_ENGINEER;
 {% endfor %}
 

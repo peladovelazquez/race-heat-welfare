@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: int_races
+    description: >
+      One row per race (all states) with start time in UTC, field size,
+      dead-heat flag and the market favourite (lowest Betfair Starting Price).
+    columns:
+      - name: race_id
+        description: Betfair win market ID.
+        data_tests:
+          - unique
+          - not_null
+      - name: scheduled_start_utc
+        description: Scheduled start, converted from Sydney time to UTC.
+        data_tests:
+          - not_null
+      - name: n_runners
+        data_tests:
+          - not_null
+      - name: is_dead_heat
+        description: True when the race has more than one winner.
+        data_tests:
+          - not_null
+      - name: n_missing_tab_numbers
+        description: >
+          Gaps in TAB numbers (max TAB number minus runners). Approximate
+          proxy for scratchings; emergencies can distort it.
+      - name: favourite_implied_probability
+        description: 1 / favourite BSP. Market-implied win probability.
+
+  - name: int_races__weather
+    description: >
+      NSW races with the weather at start time (nearest hour) and the track's
+      maximum temperature / WBGT over the meeting day.
+    columns:
+      - name: race_id
+        data_tests:
+          - unique
+          - not_null
+      - name: temperature_c
+        description: Air temperature at 2 m, nearest hour to the start (Open-Meteo).
+        data_tests:
+          - not_null
+      - name: wbgt_estimated_c
+        description: >
+          Estimated WBGT (BOM approximation, see macros/estimate_wbgt.sql).
+          Indicator only: ignores wind and solar radiation.
+        data_tests:
+          - not_null
+      - name: day_max_temperature_c
+        description: Track's maximum hourly temperature on the meeting day (Sydney local date).
+        data_tests:
+          - not_null

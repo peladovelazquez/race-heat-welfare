@@ -10,6 +10,7 @@ DEFINE DATABASE RACING_{{env}}
 {% set layers = {
     'RAW':     'Data as received from the sources (all VARCHAR)',
     'STAGING': 'Cleaning and typing - dbt stg_ models',
+    'INTERMEDIATE': 'Business logic building blocks - dbt int_ models',
     'MARTS':   'Final models for analysis and the dashboard'
 } %}
 
