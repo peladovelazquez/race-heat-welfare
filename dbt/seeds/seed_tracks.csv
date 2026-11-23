@@ -1,59 +1,59 @@
-betfair_track_name,track_name,latitude,longitude,timezone
-Randwick,Royal Randwick,-33.906,151.229,Australia/Sydney
-Newcastle,Newcastle (Broadmeadow),-32.917,151.736,Australia/Sydney
-Kembla Grange,Kembla Grange,-34.474,150.817,Australia/Sydney
-Rosehill,Rosehill Gardens,-33.824,151.023,Australia/Sydney
-Hawkesbury,Hawkesbury (Clarendon),-33.607,150.787,Australia/Sydney
-Grafton,Grafton,-29.692,152.931,Australia/Sydney
-Wagga,Wagga Wagga,-35.103,147.354,Australia/Sydney
-Wyong,Wyong,-33.283,151.416,Australia/Sydney
-Canterbury,Canterbury Park,-33.913,151.112,Australia/Sydney
-Warwick Farm,Warwick Farm,-33.912,150.937,Australia/Sydney
-Taree,Taree,-31.906,152.462,Australia/Sydney
-Scone,Scone,-32.049,150.861,Australia/Sydney
-Tamworth,Tamworth,-31.106,150.926,Australia/Sydney
-Goulburn,Goulburn,-34.743,149.711,Australia/Sydney
-Dubbo,Dubbo,-32.226,148.617,Australia/Sydney
-Gosford,Gosford,-33.428,151.336,Australia/Sydney
-Muswellbrook,Muswellbrook,-32.272,150.893,Australia/Sydney
-Albury,Albury,-36.071,146.919,Australia/Sydney
-Port Macquarie,Port Macquarie,-31.456,152.887,Australia/Sydney
-Coffs Harbour,Coffs Harbour,-30.290,153.111,Australia/Sydney
-Moruya,Moruya,-35.912,150.101,Australia/Sydney
-Nowra,Nowra,-34.876,150.588,Australia/Sydney
-Ballina,Ballina,-28.871,153.548,Australia/Sydney
-Queanbeyan,Queanbeyan,-35.358,149.237,Australia/Sydney
-Sapphire Coast,Sapphire Coast (Bega),-36.689,149.840,Australia/Sydney
-Bathurst,Bathurst,-33.420,149.578,Australia/Sydney
-Orange,Orange,-33.283,149.100,Australia/Sydney
-Armidale,Armidale,-30.506,151.652,Australia/Sydney
-Lismore,Lismore,-28.818,153.276,Australia/Sydney
-Murwillumbah,Murwillumbah,-28.327,153.395,Australia/Sydney
-Tuncurry,Tuncurry,-32.174,152.494,Australia/Sydney
-Gunnedah,Gunnedah,-30.981,150.254,Australia/Sydney
-Wellington,Wellington,-32.556,148.944,Australia/Sydney
-Mudgee,Mudgee,-32.594,149.588,Australia/Sydney
-Corowa,Corowa,-35.996,146.389,Australia/Sydney
-Moree,Moree,-29.465,149.844,Australia/Sydney
-Narromine,Narromine,-32.233,148.240,Australia/Sydney
-Gundagai,Gundagai,-35.065,148.104,Australia/Sydney
-Kempsey,Kempsey,-31.081,152.836,Australia/Sydney
-Quirindi,Quirindi,-31.507,150.678,Australia/Sydney
-Warren,Warren,-31.700,147.834,Australia/Sydney
-Inverell,Inverell,-29.775,151.112,Australia/Sydney
-Gilgandra,Gilgandra,-31.711,148.663,Australia/Sydney
-Narrandera,Narrandera,-34.748,146.551,Australia/Sydney
-Coonamble,Coonamble,-30.955,148.389,Australia/Sydney
-Coonabarabran,Coonabarabran,-31.273,149.278,Australia/Sydney
-Casino,Casino,-28.865,153.048,Australia/Sydney
-Parkes,Parkes,-33.136,148.175,Australia/Sydney
-Cowra,Cowra,-33.835,148.691,Australia/Sydney
-Forbes,Forbes,-33.384,148.008,Australia/Sydney
-Bowraville,Bowraville,-30.650,152.851,Australia/Sydney
-Illawarra Grange,Illawarra Grange (Kembla Grange B track),-34.474,150.817,Australia/Sydney
-Tumut,Tumut,-35.300,148.224,Australia/Sydney
-Leeton,Leeton,-34.551,146.404,Australia/Sydney
-Walcha,Walcha,-30.980,151.592,Australia/Sydney
-Cootamundra,Cootamundra,-34.641,148.025,Australia/Sydney
-Griffith,Griffith,-34.289,146.044,Australia/Sydney
-Glen Innes,Glen Innes,-29.735,151.738,Australia/Sydney
+betfair_track_name,track_name,latitude,longitude,timezone,region,racing_class
+Randwick,Royal Randwick,-33.906,151.229,Australia/Sydney,Coastal,Metropolitan
+Newcastle,Newcastle (Broadmeadow),-32.917,151.736,Australia/Sydney,Coastal,Provincial
+Kembla Grange,Kembla Grange,-34.474,150.817,Australia/Sydney,Coastal,Provincial
+Rosehill,Rosehill Gardens,-33.824,151.023,Australia/Sydney,Coastal,Metropolitan
+Hawkesbury,Hawkesbury (Clarendon),-33.607,150.787,Australia/Sydney,Coastal,Provincial
+Grafton,Grafton,-29.692,152.931,Australia/Sydney,Coastal,Country
+Wagga,Wagga Wagga,-35.103,147.354,Australia/Sydney,Inland,Country
+Wyong,Wyong,-33.283,151.416,Australia/Sydney,Coastal,Provincial
+Canterbury,Canterbury Park,-33.913,151.112,Australia/Sydney,Coastal,Metropolitan
+Warwick Farm,Warwick Farm,-33.912,150.937,Australia/Sydney,Coastal,Metropolitan
+Taree,Taree,-31.906,152.462,Australia/Sydney,Coastal,Country
+Scone,Scone,-32.049,150.861,Australia/Sydney,Inland,Country
+Tamworth,Tamworth,-31.106,150.926,Australia/Sydney,Inland,Country
+Goulburn,Goulburn,-34.743,149.711,Australia/Sydney,Inland,Country
+Dubbo,Dubbo,-32.226,148.617,Australia/Sydney,Inland,Country
+Gosford,Gosford,-33.428,151.336,Australia/Sydney,Coastal,Provincial
+Muswellbrook,Muswellbrook,-32.272,150.893,Australia/Sydney,Inland,Country
+Albury,Albury,-36.071,146.919,Australia/Sydney,Inland,Country
+Port Macquarie,Port Macquarie,-31.456,152.887,Australia/Sydney,Coastal,Country
+Coffs Harbour,Coffs Harbour,-30.290,153.111,Australia/Sydney,Coastal,Country
+Moruya,Moruya,-35.912,150.101,Australia/Sydney,Coastal,Country
+Nowra,Nowra,-34.876,150.588,Australia/Sydney,Coastal,Country
+Ballina,Ballina,-28.871,153.548,Australia/Sydney,Coastal,Country
+Queanbeyan,Queanbeyan,-35.358,149.237,Australia/Sydney,Inland,Country
+Sapphire Coast,Sapphire Coast (Bega),-36.689,149.840,Australia/Sydney,Coastal,Country
+Bathurst,Bathurst,-33.420,149.578,Australia/Sydney,Inland,Country
+Orange,Orange,-33.283,149.100,Australia/Sydney,Inland,Country
+Armidale,Armidale,-30.506,151.652,Australia/Sydney,Inland,Country
+Lismore,Lismore,-28.818,153.276,Australia/Sydney,Coastal,Country
+Murwillumbah,Murwillumbah,-28.327,153.395,Australia/Sydney,Coastal,Country
+Tuncurry,Tuncurry,-32.174,152.494,Australia/Sydney,Coastal,Country
+Gunnedah,Gunnedah,-30.981,150.254,Australia/Sydney,Inland,Country
+Wellington,Wellington,-32.556,148.944,Australia/Sydney,Inland,Country
+Mudgee,Mudgee,-32.594,149.588,Australia/Sydney,Inland,Country
+Corowa,Corowa,-35.996,146.389,Australia/Sydney,Inland,Country
+Moree,Moree,-29.465,149.844,Australia/Sydney,Inland,Country
+Narromine,Narromine,-32.233,148.240,Australia/Sydney,Inland,Country
+Gundagai,Gundagai,-35.065,148.104,Australia/Sydney,Inland,Country
+Kempsey,Kempsey,-31.081,152.836,Australia/Sydney,Coastal,Country
+Quirindi,Quirindi,-31.507,150.678,Australia/Sydney,Inland,Country
+Warren,Warren,-31.700,147.834,Australia/Sydney,Inland,Country
+Inverell,Inverell,-29.775,151.112,Australia/Sydney,Inland,Country
+Gilgandra,Gilgandra,-31.711,148.663,Australia/Sydney,Inland,Country
+Narrandera,Narrandera,-34.748,146.551,Australia/Sydney,Inland,Country
+Coonamble,Coonamble,-30.955,148.389,Australia/Sydney,Inland,Country
+Coonabarabran,Coonabarabran,-31.273,149.278,Australia/Sydney,Inland,Country
+Casino,Casino,-28.865,153.048,Australia/Sydney,Coastal,Country
+Parkes,Parkes,-33.136,148.175,Australia/Sydney,Inland,Country
+Cowra,Cowra,-33.835,148.691,Australia/Sydney,Inland,Country
+Forbes,Forbes,-33.384,148.008,Australia/Sydney,Inland,Country
+Bowraville,Bowraville,-30.650,152.851,Australia/Sydney,Coastal,Country
+Illawarra Grange,Illawarra Grange (Kembla Grange B track),-34.474,150.817,Australia/Sydney,Coastal,Provincial
+Tumut,Tumut,-35.300,148.224,Australia/Sydney,Inland,Country
+Leeton,Leeton,-34.551,146.404,Australia/Sydney,Inland,Country
+Walcha,Walcha,-30.980,151.592,Australia/Sydney,Inland,Country
+Cootamundra,Cootamundra,-34.641,148.025,Australia/Sydney,Inland,Country
+Griffith,Griffith,-34.289,146.044,Australia/Sydney,Inland,Country
+Glen Innes,Glen Innes,-29.735,151.738,Australia/Sydney,Inland,Country

@@ -17,6 +17,12 @@ analysis-paths: ["analyses"]
 
 clean-targets: ["target", "dbt_packages"]
 
+vars:
+  # Racing NSW "Racing in Hot Weather" policy: heat stress is most likely when
+  # the ambient temperature is 35C or above, or the WBGT (shade) is 26C or above.
+  heat_policy_max_temperature_c: 35
+  heat_policy_wbgt_c: 26
+
 models:
   race_heat_welfare:
     staging:

@@ -21,3 +21,19 @@ seeds:
           - not_null:
               config:
                 severity: warn
+      - name: region
+        description: >
+          Coastal (roughly within 60 km of the coast, including the Sydney
+          basin) or Inland. Approximate, curated by hand.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Coastal", "Inland"]
+      - name: racing_class
+        description: Racing NSW club class (Metropolitan, Provincial or Country).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Metropolitan", "Provincial", "Country"]

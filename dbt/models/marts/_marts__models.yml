@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: fct_race_conditions
+    description: >
+      One row per NSW race with weather at start time, meeting-day maximums,
+      heat-risk level (Racing NSW Hot Weather Policy thresholds), track
+      region/class and market favourite outcome.
+    columns:
+      - name: race_id
+        data_tests:
+          - unique
+          - not_null
+      - name: region
+        data_tests:
+          - not_null
+      - name: season
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Summer", "Autumn", "Winter", "Spring"]
+      - name: heat_risk_level
+        description: >
+          High = both policy thresholds met; Elevated = one met; None = neither.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["High", "Elevated", "None"]
+      - name: wbgt_estimated_c
+        description: >
+          Estimated WBGT at race start (BOM approximation, assumes sun).
+          Conservative versus the policy's shade threshold.
+      - name: favourite_won
+        description: >
+          True if the market favourite won (a dead heat for first counts as a win).
