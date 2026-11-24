@@ -2,13 +2,15 @@
     One row per NSW race with its heat conditions and heat-risk level, ready
     for analysis and the dashboard.
 
-    Heat risk follows the Racing NSW "Racing in Hot Weather" policy thresholds
-    (dbt vars, see dbt_project.yml):
-      - meeting-day maximum temperature   >= heat_policy_max_temperature_c
-      - estimated WBGT in the SHADE at start >= heat_policy_wbgt_c
-    'High' when both are met, 'Elevated' when one is met, 'None' otherwise.
+    heat_policy_level mirrors the two levels of the Racing NSW "Racing in Hot
+    Weather" policy (thresholds are dbt vars, see dbt_project.yml):
+      - Level 2: meeting-day max temperature >= 38C or WBGT (shade) at start >= 28C
+      - Level 1: meeting-day max temperature >= 35C or WBGT (shade) at start >= 26C
+      - None:    below both Level 1 thresholds
+    Validated against dated public announcements (dbt/analyses/
+    q3_validation_hot_weather_events.sql).
 
-    is_above_wbgt_sun_threshold applies the same threshold to the sun estimate
+    is_level1_wbgt_sun applies the Level 1 WBGT threshold to the sun estimate
     (worst case) and is kept for sensitivity analysis only.
 */
 
@@ -53,12 +55,11 @@ enriched as (
         end                                             as start_time_band,
 
         -- policy thresholds
-        races.day_max_temperature_c >= {{ var('heat_policy_max_temperature_c') }}
-                                                        as is_above_temperature_threshold,
-        races.wbgt_shade_estimated_c >= {{ var('heat_policy_wbgt_c') }}
-                                                        as is_above_wbgt_threshold,
-        races.wbgt_sun_estimated_c >= {{ var('heat_policy_wbgt_c') }}
-                                                        as is_above_wbgt_sun_threshold
+        races.day_max_temperature_c  >= {{ var('heat_policy_max_temperature_c') }}     as is_level1_temperature,
+        races.wbgt_shade_estimated_c >= {{ var('heat_policy_wbgt_c') }}                as is_level1_wbgt,
+        races.day_max_temperature_c  >= {{ var('heat_policy_level2_temperature_c') }}  as is_level2_temperature,
+        races.wbgt_shade_estimated_c >= {{ var('heat_policy_level2_wbgt_c') }}         as is_level2_wbgt,
+        races.wbgt_sun_estimated_c   >= {{ var('heat_policy_wbgt_c') }}                as is_level1_wbgt_sun
 
     from races
     left join tracks
@@ -107,15 +108,22 @@ final as (
         day_max_wbgt_shade_estimated_c,
         day_max_wbgt_sun_estimated_c,
 
-        -- heat risk
-        is_above_temperature_threshold,
-        is_above_wbgt_threshold,
-        is_above_wbgt_sun_threshold,
+        -- heat policy level
+        is_level1_temperature,
+        is_level1_wbgt,
+        is_level2_temperature,
+        is_level2_wbgt,
+        is_level1_wbgt_sun,
         case
-            when is_above_temperature_threshold and is_above_wbgt_threshold then 'High'
-            when is_above_temperature_threshold or  is_above_wbgt_threshold then 'Elevated'
+            when is_level2_temperature or is_level2_wbgt then 'Level 2'
+            when is_level1_temperature or is_level1_wbgt then 'Level 1'
             else 'None'
-        end                                             as heat_risk_level,
+        end                                             as heat_policy_level,
+        case
+            when is_level2_temperature or is_level2_wbgt then 2
+            when is_level1_temperature or is_level1_wbgt then 1
+            else 0
+        end                                             as heat_policy_level_rank,
 
         -- field and result
         n_runners,

@@ -4,8 +4,8 @@ models:
   - name: fct_race_conditions
     description: >
       One row per NSW race with weather at start time, meeting-day maximums,
-      heat-risk level (Racing NSW Hot Weather Policy thresholds), track
-      region/class and market favourite outcome.
+      Racing NSW heat-policy level (Level 1 / Level 2), track region/class and
+      market favourite outcome.
     columns:
       - name: race_id
         data_tests:
@@ -19,21 +19,29 @@ models:
           - accepted_values:
               arguments:
                 values: ["Summer", "Autumn", "Winter", "Spring"]
-      - name: heat_risk_level
+      - name: heat_policy_level
         description: >
-          Based on meeting-day max temperature and WBGT in the shade at start.
-          High = both policy thresholds met; Elevated = one met; None = neither.
+          Racing NSW Hot Weather Policy level implied by our data.
+          Level 2 = max temperature >= 38C or WBGT shade >= 28C;
+          Level 1 = max temperature >= 35C or WBGT shade >= 26C; None otherwise.
         data_tests:
           - not_null
           - accepted_values:
               arguments:
-                values: ["High", "Elevated", "None"]
+                values: ["None", "Level 1", "Level 2"]
+      - name: heat_policy_level_rank
+        description: 0 = None, 1 = Level 1, 2 = Level 2 (for sorting).
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1, 2]
       - name: wbgt_shade_estimated_c
-        description: Estimated WBGT in the shade at start. Used for heat_risk_level.
+        description: Estimated WBGT in the shade at start. Used for heat_policy_level.
       - name: wbgt_sun_estimated_c
         description: Estimated WBGT in the sun at start (BOM). Worst case, reference only.
-      - name: is_above_wbgt_sun_threshold
-        description: Sensitivity flag - the policy WBGT threshold applied to the sun estimate.
+      - name: is_level1_wbgt_sun
+        description: Sensitivity flag - the Level 1 WBGT threshold applied to the sun estimate.
       - name: favourite_won
         description: >
           True if the market favourite won (a dead heat for first counts as a win).
