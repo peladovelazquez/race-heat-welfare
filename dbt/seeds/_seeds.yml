@@ -37,3 +37,38 @@ seeds:
           - accepted_values:
               arguments:
                 values: ["Metropolitan", "Provincial", "Country"]
+
+  - name: seed_hot_weather_events
+    description: >
+      Hand-collected, dated public announcements of heat measures at NSW
+      thoroughbred meetings (policy levels invoked, meetings postponed,
+      transferred or with changed race times). NOT a complete list: Racing NSW
+      news items rarely state the year, so only events with a verifiable or
+      strongly inferable date are included. Used for case-study validation.
+    columns:
+      - name: event_date
+        data_tests:
+          - not_null
+      - name: betfair_track_name
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('seed_tracks')
+                field: betfair_track_name
+      - name: action
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["level_1", "level_2", "times_changed", "postponed", "transferred", "under_review"]
+      - name: date_confidence
+        description: >
+          confirmed = date stated by the source; probable = year or day
+          inferred (weekday match or article publication date).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["confirmed", "probable"]
+      - name: source_url
+        data_tests:
+          - not_null

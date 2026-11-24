@@ -1,0 +1,7 @@
+event_date,betfair_track_name,action,forecast_max_temperature_c,date_confidence,source_url,notes
+2023-12-09,Parkes,postponed,,confirmed,https://racingaustralia.horse/FreeServices/AbandonedAndTransferredMeetings.aspx,Postponed due to hot weather; forecast temperature increased and no suitable alternative venue
+2026-01-08,Wagga,transferred,43,confirmed,https://racingaustralia.horse/FreeServices/AbandonedAndTransferredMeetings.aspx,Extreme heat forecast; meeting moved to Sunday 11 January 2026
+2026-01-09,Parkes,times_changed,,probable,https://www.justhorseracing.com.au/news/australian-racing/wyong-races-brought-forward-due-to-heat/878265,Race times adjusted; date inferred from article publication date
+2026-01-09,Ballina,times_changed,,probable,https://www.justhorseracing.com.au/news/australian-racing/wyong-races-brought-forward-due-to-heat/878265,Race times adjusted; date inferred from article publication date
+2026-01-10,Wyong,times_changed,,confirmed,https://www.justhorseracing.com.au/news/australian-racing/wyong-races-brought-forward-due-to-heat/878265,Start brought forward to 11:05am; highest metropolitan hot weather protocols
+2026-01-10,Kembla Grange,under_review,41,confirmed,https://thestraight.com.au/contingency-plans-in-place-for-major-meetings-in-nsw/,Forecast 41C; Goulburn considered as alternative venue (final outcome not stated)
