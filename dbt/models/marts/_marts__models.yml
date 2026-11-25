@@ -45,3 +45,20 @@ models:
       - name: favourite_won
         description: >
           True if the market favourite won (a dead heat for first counts as a win).
+
+  - name: fct_heat_event_validation
+    description: >
+      One row per hand-collected heat event (seed_hot_weather_events) with the
+      track's maximum temperature and WBGT (shade) that day, the policy level
+      implied by our data and whether the meeting appears in Betfair.
+      Case-study validation, not a recall metric (the event list is incomplete).
+    columns:
+      - name: model_policy_level
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Below thresholds", "Level 1", "Level 2"]
+      - name: day_max_temperature_c
+        data_tests:
+          - not_null

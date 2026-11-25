@@ -1,3 +1,6 @@
 # Development tools (not needed to run the ingestion scripts)
 -r requirements.txt
 dbt==2.0.12
+snowflake-connector-python[pandas]
+pyarrow
+streamlit

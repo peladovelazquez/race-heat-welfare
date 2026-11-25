@@ -1,0 +1,19 @@
+# Snowflake CLI project definition for the Streamlit in Snowflake deployment.
+#   cd dashboard
+#   snow streamlit deploy --replace -c racing_dev
+definition_version: 2
+entities:
+  race_heat_dashboard:
+    type: streamlit
+    identifier:
+      name: RACE_HEAT_DASHBOARD
+      database: RACING_DEV
+      schema: APPS
+    title: "NSW Race-Day Heat Dashboard"
+    comment: "race-heat-welfare dashboard - live data from the MARTS layer"
+    query_warehouse: RACING_WH_DEV
+    main_file: streamlit_app.py
+    stage: STREAMLIT_STAGE
+    artifacts:
+      - streamlit_app.py
+      - data_access.py

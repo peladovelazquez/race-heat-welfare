@@ -1,6 +1,7 @@
 /*
-    Q3 - Case-study validation: does our weather data flag the days on which
-    Racing NSW took heat measures?
+    Case-study validation (Q3): does our weather data flag the days on which
+    Racing NSW took heat measures? Materialised as a mart so the dashboard can
+    show it (it was previously an analysis).
 
     For each hand-collected event (seed_hot_weather_events) it shows:
       - the track's maximum temperature and maximum WBGT (shade) that day,

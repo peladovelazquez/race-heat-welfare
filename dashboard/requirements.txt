@@ -1,0 +1,7 @@
+# Streamlit Community Cloud dependencies (the Snowflake version needs none:
+# pandas, Altair and pydeck ship with Streamlit)
+streamlit>=1.39
+pandas
+altair
+pydeck
+pyarrow

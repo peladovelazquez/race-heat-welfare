@@ -17,7 +17,7 @@ GRANT USAGE ON WAREHOUSE RACING_WH_{{env}} TO ROLE RACING_{{env}}_ENGINEER;
 GRANT USAGE ON DATABASE  RACING_{{env}}    TO ROLE RACING_{{env}}_ENGINEER;
 
 -- Schemas
-{% for layer in ['RAW', 'STAGING', 'INTERMEDIATE', 'MARTS'] %}
+{% for layer in ['RAW', 'STAGING', 'INTERMEDIATE', 'MARTS', 'APPS'] %}
 GRANT USAGE ON SCHEMA RACING_{{env}}.{{layer}} TO ROLE RACING_{{env}}_ENGINEER;
 {% endfor %}
 
@@ -36,3 +36,7 @@ GRANT READ, WRITE ON STAGE RACING_{{env}}.RAW.{{stage}} TO ROLE RACING_{{env}}_E
 {% for table in ['BETFAIR_RUNNERS', 'WEATHER_HOURLY'] %}
 GRANT SELECT, INSERT ON TABLE RACING_{{env}}.RAW.{{table}} TO ROLE RACING_{{env}}_ENGINEER;
 {% endfor %}
+
+-- APPS: deploy the Streamlit dashboard with Snowflake CLI
+-- (the CLI uploads the app files to a stage it creates in this schema)
+GRANT CREATE STREAMLIT, CREATE STAGE ON SCHEMA RACING_{{env}}.APPS TO ROLE RACING_{{env}}_ENGINEER;

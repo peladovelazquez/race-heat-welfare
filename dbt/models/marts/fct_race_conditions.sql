@@ -33,6 +33,8 @@ enriched as (
         tracks.track_name,
         tracks.region,
         tracks.racing_class,
+        tracks.latitude,
+        tracks.longitude,
 
         -- calendar (southern hemisphere seasons)
         year(races.meeting_date)                        as meeting_year,
@@ -77,6 +79,8 @@ final as (
         track_name,
         region,
         racing_class,
+        latitude,
+        longitude,
         race_number,
         race_name,
         race_type,

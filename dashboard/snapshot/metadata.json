@@ -1,0 +1,8 @@
+{
+  "exported_at": "2026-11-25",
+  "source": "RACING_DEV.MARTS",
+  "tables": [
+    "fct_race_conditions",
+    "fct_heat_event_validation"
+  ]
+}
