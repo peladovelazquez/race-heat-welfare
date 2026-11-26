@@ -5,6 +5,9 @@ name: CI
 on:
   pull_request:
     branches: [main]
+    paths-ignore:          # docs-only changes do not need a build
+      - "**.md"
+      - "docs/**"
   workflow_dispatch:
 
 concurrency:
