@@ -12,3 +12,7 @@ SET my_user = CURRENT_USER();
 GRANT ROLE RACING_<% env %>_ENGINEER TO USER IDENTIFIER($my_user);
 
 SHOW GRANTS TO ROLE RACING_<% env %>_ENGINEER;
+
+-- CI service user needs the same environment role to run dbt.
+GRANT ROLE RACING_<% env %>_ENGINEER TO USER RACING_CI_USER;
+

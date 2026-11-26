@@ -13,6 +13,7 @@
 -- =============================================================================
 
 USE ROLE RACING_<% env %>_ENGINEER;
+USE DATABASE RACING_<% env %>;
 USE WAREHOUSE RACING_WH_<% env %>;
 
 -- 1. Upload files to the stages (PUT gzips them automatically) -----------------
