@@ -1,0 +1,28 @@
+# Runs when changes land on main: deploys infrastructure, then rebuilds PROD.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false   # never interrupt a deployment halfway
+
+jobs:
+  deploy:
+    name: Deploy to PROD
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-snowflake
+        with:
+          account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          private-key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+      - name: Deploy infrastructure (DCM)
+        run: snow dcm deploy --target PROD --from snowflake/dcm -c ci_deployer
+      - name: Build and test models
+        working-directory: dbt
+        run: dbt build --target prod --profiles-dir ci
