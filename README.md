@@ -83,6 +83,7 @@ flowchart LR
 - **Least-privilege roles.** `RACING_DEPLOYER` owns and changes infrastructure. `RACING_<ENV>_ENGINEER` loads data and runs dbt, and cannot drop or create infrastructure. Both roll up to `SYSADMIN`. An account-level resource monitor caps monthly credits.
 - **RAW is all VARCHAR.** Loads never fail on an unexpected format, and every parsing rule lives in dbt, where it is tested.
 - **Policy thresholds as dbt vars.** Level 1 is 35°C or a WBGT in the shade of 26°C. Level 2 is 38°C or a WBGT in the shade of 28°C. If the policy changes, one file changes.
+- **Materialisation follows read patterns.** Staging and intermediate are views: they are rarely queried directly, cost nothing to build, and always reflect the latest RAW load. Marts are tables, because the dashboard and analyses read them repeatedly. Incremental models were considered and left out on purpose: the full history (about 735k runner rows and 2M weather rows) rebuilds in under a minute on an XS warehouse, so a full refresh is simpler and avoids late-arriving-data edge cases.
 - **WBGT in the shade:** 0.7 × wet-bulb temperature (Stull, 2011) + 0.3 × air temperature, matching the policy's "WBGT shade". The Bureau of Meteorology sun approximation is kept as a worst case.
 - **One dashboard, two deployments.** The same code reads the marts live inside Streamlit in Snowflake, and a Parquet snapshot on Streamlit Community Cloud. The public version keeps working after the Snowflake trial ends.
 - **dbt v2.** dbt v2 is the current major version and is supported by dbt Projects on Snowflake.
@@ -162,6 +163,7 @@ cd dashboard && snow streamlit deploy --replace -c racing_dev
 
 - [ ] CI/CD with GitHub Actions: `dbt build` and `snow dcm plan` on every pull request
 - [ ] Automated monthly ingestion when Betfair publishes a new file
+- [ ] Switch the largest models to incremental (`unique_key` on race and weather hour) once automated monthly loads make full rebuilds the bottleneck
 - [ ] Landing zone in S3 with a storage integration and Snowpipe auto-ingest
 - [ ] PROD environment deployment
 - [ ] Extract late scratchings and their reasons from stewards' reports with Snowflake Cortex AI
