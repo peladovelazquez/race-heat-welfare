@@ -1,0 +1,3 @@
+# Tooling for GitHub Actions runners
+dbt==2.0.12
+snowflake-cli==3.34.0

@@ -1,0 +1,25 @@
+# dbt profile used only by GitHub Actions (key-pair auth as RACING_CI_USER).
+# Local development keeps using ~/.dbt/profiles.yml.
+race_heat_welfare:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: RACING_CI_USER
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      role: RACING_DEV_ENGINEER
+      warehouse: RACING_WH_DEV
+      database: RACING_DEV
+      schema: STAGING
+      threads: 4
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: RACING_CI_USER
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      role: RACING_PROD_ENGINEER
+      warehouse: RACING_WH_PROD
+      database: RACING_PROD
+      schema: STAGING
+      threads: 4

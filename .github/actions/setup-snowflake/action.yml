@@ -1,0 +1,46 @@
+name: Set up Snowflake tooling
+description: Installs dbt and Snowflake CLI, writes the CI private key and the CLI connection config.
+
+inputs:
+  account:
+    description: Snowflake account identifier
+    required: true
+  private-key:
+    description: Contents of the RACING_CI_USER private key (.p8)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: pip
+        cache-dependency-path: requirements-ci.txt
+
+    - name: Install dbt and Snowflake CLI
+      shell: bash
+      run: python -m pip install -r requirements-ci.txt
+
+    - name: Write private key and Snowflake CLI config
+      shell: bash
+      env:
+        SNOWFLAKE_ACCOUNT: ${{ inputs.account }}
+        SNOWFLAKE_PRIVATE_KEY: ${{ inputs.private-key }}
+      run: |
+        mkdir -p ~/.snowflake
+        printf '%s\n' "$SNOWFLAKE_PRIVATE_KEY" > ~/.snowflake/rsa_key.p8
+        chmod 600 ~/.snowflake/rsa_key.p8
+        cat > ~/.snowflake/config.toml <<EOF
+        [connections.ci_deployer]
+        account = "$SNOWFLAKE_ACCOUNT"
+        user = "RACING_CI_USER"
+        authenticator = "SNOWFLAKE_JWT"
+        private_key_file = "$HOME/.snowflake/rsa_key.p8"
+        role = "RACING_DEPLOYER"
+        warehouse = "RACING_DEPLOY_WH"
+        EOF
+        chmod 600 ~/.snowflake/config.toml
+        # Exposed to later steps for the dbt CI profile
+        echo "SNOWFLAKE_ACCOUNT=$SNOWFLAKE_ACCOUNT" >> "$GITHUB_ENV"
+        echo "SNOWFLAKE_PRIVATE_KEY_PATH=$HOME/.snowflake/rsa_key.p8" >> "$GITHUB_ENV"

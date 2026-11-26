@@ -1,0 +1,39 @@
+# Runs on every pull request to main: shows infrastructure changes and
+# builds + tests all dbt models against DEV.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dcm-plan:
+    name: DCM plan (PROD)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-snowflake
+        with:
+          account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          private-key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+      # Plan against PROD: shows exactly what merging this PR would change
+      - name: Plan infrastructure changes
+        run: snow dcm plan --target PROD --from snowflake/dcm -c ci_deployer
+
+  dbt-build:
+    name: dbt build (DEV)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-snowflake
+        with:
+          account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          private-key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+      - name: Build and test models
+        working-directory: dbt
+        run: dbt build --target dev --profiles-dir ci
