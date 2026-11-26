@@ -1,5 +1,8 @@
 # Race Heat Welfare: NSW race-day heat exposure
 
+[![CI](https://github.com/peladovelazquez/race-heat-welfare/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/peladovelazquez/race-heat-welfare/actions/workflows/ci.yml)
+[![Deploy](https://github.com/peladovelazquez/race-heat-welfare/actions/workflows/deploy.yml/badge.svg)](https://github.com/peladovelazquez/race-heat-welfare/actions/workflows/deploy.yml)
+
 **How often are NSW thoroughbred races run in conditions covered by the Racing NSW Hot Weather Policy, and what drives that exposure?**
 
 An end-to-end data pipeline that joins Betfair race results with hourly weather for 58 NSW tracks, estimates heat stress (WBGT) at every race start, and classifies each race against the official policy levels.
@@ -8,7 +11,7 @@ An end-to-end data pipeline that joins Betfair race results with hourly weather 
 
 ![Dashboard overview](docs/images/dashboard_overview.png)
 
-**Stack:** Python · Snowflake (DCM Projects, Streamlit in Snowflake) · dbt v2 · Streamlit · GitHub
+**Stack:** Python · Snowflake (DCM Projects, Streamlit in Snowflake) · dbt v2 · Streamlit · GitHub Actions
 
 ---
 
@@ -88,6 +91,15 @@ flowchart LR
 - **One dashboard, two deployments.** The same code reads the marts live inside Streamlit in Snowflake, and a Parquet snapshot on Streamlit Community Cloud. The public version keeps working after the Snowflake trial ends.
 - **dbt v2.** dbt v2 is the current major version and is supported by dbt Projects on Snowflake.
 
+## CI/CD
+
+| Trigger | Workflow | What it does |
+|---|---|---|
+| Pull request to `main` | **CI** | `snow dcm plan` against PROD (shows any infrastructure change) and `dbt build` against DEV (all models and tests) |
+| Merge to `main` | **Deploy** | `snow dcm deploy` to PROD, then `dbt build --target prod` |
+
+GitHub Actions authenticates as `RACING_CI_USER`, a Snowflake service user with key-pair authentication and no password. The private key is stored as a GitHub secret, and the dbt CI profile (`dbt/ci/profiles.yml`) reads everything from environment variables. PROD is only changed by the pipeline. Documentation-only changes skip both workflows.
+
 ## Data quality findings
 
 Every finding below is handled in code and covered by a dbt test:
@@ -113,12 +125,16 @@ Every finding below is handled in code and covered by a dbt test:
 
 ```
 race-heat-welfare/
+├── .github/
+│   ├── actions/setup-snowflake/  # shared setup: dbt, Snowflake CLI, key-pair auth
+│   └── workflows/            # ci.yml (pull requests), deploy.yml (main → PROD)
 ├── scripts/                  # Python: weather download, track seed helper, dashboard snapshot export
 ├── snowflake/
-│   ├── bootstrap/            # one-off setup (deployer role, admin DB, resource monitor)
+│   ├── bootstrap/            # one-off setup (deployer role, admin DB, resource monitor, CI service user)
 │   ├── dcm/                  # DCM Project: manifest + declarative definitions (DEV/PROD)
 │   └── load/                 # PUT + COPY INTO into RAW
 ├── dbt/
+│   ├── ci/                   # dbt profile for GitHub Actions (env vars only)
 │   ├── models/               # staging / intermediate / marts
 │   ├── seeds/                # tracks, hot-weather events (with source URLs)
 │   ├── macros/               # wet-bulb and WBGT estimates, schema naming
@@ -156,16 +172,23 @@ cd dbt && dbt build && cd ..
 # 6. Dashboard
 python scripts/export_dashboard_snapshot.py
 streamlit run dashboard/streamlit_app.py
-cd dashboard && snow streamlit deploy --replace -c racing_dev
+cd dashboard && snow streamlit deploy --replace -c racing_dev && cd ..
+
+# 7. CI/CD (optional): service user with key-pair auth, then PROD
+snow sql -f snowflake/bootstrap/02_ci_user.sql -D "ci_public_key=<public key body>"
+snow dcm create --target PROD --from snowflake/dcm
+snow dcm deploy --target PROD --from snowflake/dcm
+snow sql -f snowflake/bootstrap/01_post_deploy.sql -D "env=PROD"
+# Add SNOWFLAKE_ACCOUNT and SNOWFLAKE_PRIVATE_KEY as GitHub repository secrets
 ```
 
 ## Roadmap
 
-- [ ] CI/CD with GitHub Actions: `dbt build` and `snow dcm plan` on every pull request
+- [x] CI/CD with GitHub Actions: `dbt build` and `snow dcm plan` on every pull request, deploy to PROD on merge
+- [x] PROD environment deployment
 - [ ] Automated monthly ingestion when Betfair publishes a new file
 - [ ] Switch the largest models to incremental (`unique_key` on race and weather hour) once automated monthly loads make full rebuilds the bottleneck
 - [ ] Landing zone in S3 with a storage integration and Snowpipe auto-ingest
-- [ ] PROD environment deployment
 - [ ] Extract late scratchings and their reasons from stewards' reports with Snowflake Cortex AI
 
 ## Data sources and references
